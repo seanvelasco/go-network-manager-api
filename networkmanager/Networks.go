@@ -6,7 +6,7 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-func AddNetwork(ssid, password string) (interface{}, error) {
+func AddNetwork(ssid, password string) error {
 
 	settings := Settings{
 		"connection": {
@@ -34,10 +34,12 @@ func AddNetwork(ssid, password string) (interface{}, error) {
 	view := obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings) //.Store(&id)
 
 	if view.Err != nil {
-		return 0, view.Err
+		return view.Err
 	}
 
-	return view.Body[0], nil
+	// view.Body[0]
+
+	return nil
 }
 
 func ForgetNetwork(path dbus.ObjectPath) (interface{}, error) {
