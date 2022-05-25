@@ -22,15 +22,3 @@ func ListSavedConnections() (interface{}, error) {
 	return settings.Body, nil
 
 }
-
-func ListDevices() (interface{}, error) {
-	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
-
-	devices := obj.Call("org.freedesktop.NetworkManager.GetDevices", 0)
-
-	if devices.Err != nil {
-		return nil, devices.Err
-	}
-
-	return devices.Body[0], nil
-}

@@ -7,17 +7,11 @@ import (
 
 func main() {
 
-	// savedconnections, err := networkmanager.ListSavedConnections()
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println(savedconnections)
-
-	devices, err := networkmanager.ListDevices()
+	savedconnections, err := networkmanager.ListSavedConnections()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("DEVICES", devices)
+	fmt.Println("SETTINGS", savedconnections)
 
 	add, err := networkmanager.AddNetwork("test", "PASSWORD")
 	if err != nil {
@@ -46,12 +40,27 @@ func main() {
 
 	fmt.Println("ACCESS POINTS", aps)
 
-	dev, err := networkmanager.GetWirelessDevices()
+	devices, err := networkmanager.ListDevices()
 
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("DEVICES", dev)
+	fmt.Println("DEVICES", devices)
+
+	wireless, err := networkmanager.GetDeviceByType(2)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("WIRELESS", wireless)
+
+	wired, err := networkmanager.GetDeviceByType(1)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("WIRED", wired)
 
 }
