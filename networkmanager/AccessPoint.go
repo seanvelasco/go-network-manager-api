@@ -84,6 +84,7 @@ func (a *accessPoint) GetMaxBitrate() (uint32, error) {
 
 }
 
+// scanWirelessNetworks
 func GetAccessPointInfo(path dbus.ObjectPath) (interface{}, error) {
 
 	obj := c.Object("org.freedesktop.NetworkManager", path)
@@ -119,4 +120,18 @@ func GetAccessPointInfo(path dbus.ObjectPath) (interface{}, error) {
 		"maxbitrate": maxbitrate,
 	}, nil
 
+}
+
+func createAccessPoint(path dbus.ObjectPath) *accessPoint {
+
+	obj := c.Object("org.freedesktop.NetworkManager", path)
+
+	ap := &accessPoint{
+		dbusBase: dbusBase{
+			conn: c,
+			obj:  obj,
+		},
+	}
+
+	return ap
 }
