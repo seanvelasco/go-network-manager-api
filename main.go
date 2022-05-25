@@ -7,13 +7,23 @@ import (
 	"net/http"
 )
 
-// func settings(w http.ResponseWriter, req *http.Request) {
-// 	savedconnections, err := networkmanager.ListSavedConnections()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Fprintf(w, "%s", "savedconnections")
-// }
+var ResponseMessage struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+func settings(w http.ResponseWriter, req *http.Request) {
+	savedconnections, err := networkmanager.ListSavedConnections()
+	if err != nil {
+		panic(err)
+	}
+	jsonString, err := json.Marshal(savedconnections)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	fmt.Fprintf(w, "%s", jsonString)
+
+}
 
 func connectivity(w http.ResponseWriter, req *http.Request) {
 	connectivity, err := networkmanager.CheckConnectivity()
@@ -59,11 +69,6 @@ func wirelessDevices(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	fmt.Fprintf(w, "%s", jsonString)
-}
-
-var ResponseMessage struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
 }
 
 func addNetwork(w http.ResponseWriter, req *http.Request) {
@@ -112,12 +117,12 @@ func addNetwork(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 
-	settings, err := networkmanager.GetConnectionSettings("/org/freedesktop/NetworkManager/Settings/71")
+	// settings, err := networkmanager.GetConnectionSettings("/org/freedesktop/NetworkManager/Settings/71")
 
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("SETTINGS", settings)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println("SETTINGS", settings)
 
 	// aps, err := networkmanager.GetAccessPoints("/org/freedesktop/NetworkManager/Devices/2")
 
@@ -125,15 +130,13 @@ func main() {
 	// 	panic(err)
 	// }
 
-	// fmt.Println("ACCESS POINTS", aps)
-
 	// for _, attr := range wireless {
 	// 	println(attr.(map[string]interface{})["State"].(uint32))
 	// }
 
 	// fmt.Println("WIRED", wired)
 
-	// http.HandleFunc("/settings", settings)
+	http.HandleFunc("/settings", settings)
 	http.HandleFunc("/connectivity", connectivity)
 	http.HandleFunc("/devices", devices)
 	http.HandleFunc("/devices/wired", wiredDevices)
