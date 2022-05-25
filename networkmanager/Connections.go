@@ -21,3 +21,13 @@ func GetConnectionSettings(path dbus.ObjectPath) (interface{}, error) {
 
 	return rv, nil
 }
+
+func activateConnection(connection interface{}, path dbus.ObjectPath) (interface{}, error) {
+
+	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+
+	var activeConnection []interface{}
+	obj.Call("org.freedesktop.NetworkManager.ActivateConnection", 0, connection, path, "/").Store(&activeConnection)
+
+	return activeConnection, nil
+}
