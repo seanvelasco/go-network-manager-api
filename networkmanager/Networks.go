@@ -80,3 +80,29 @@ func GetAccessPoints(path dbus.ObjectPath) (interface{}, error) {
 	return rv, nil
 
 }
+
+func InternetSharingOverEthernet() {
+
+	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
+
+	settings := &Settings{
+		"connection": map[string]interface{}{
+			"id":   "Internet Sharing over Ethernet",
+			"uuid": "uuid",
+			"type": "802-3-ethernet",
+		},
+		"802-3-ethernet": map[string]interface{}{
+			// "wake-on-lan": true,
+			"auto-negotiate": false,
+		},
+		"ipv4": map[string]interface{}{
+			"method": "shared",
+		},
+		"ipv6": map[string]interface{}{
+			"method": "ignore",
+		},
+	}
+
+	obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings)
+
+}

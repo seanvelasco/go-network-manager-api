@@ -117,6 +117,8 @@ func addNetwork(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 
+	networkmanager.InternetSharingOverEthernet()
+
 	// settings, err := networkmanager.GetConnectionSettings("/org/freedesktop/NetworkManager/Settings/71")
 
 	// if err != nil {
