@@ -11,6 +11,7 @@ func CheckConnectivity() (interface{}, error) {
 }
 
 func ListSavedConnections() (interface{}, error) {
+
 	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
 
 	settings := obj.Call("org.freedesktop.NetworkManager.Settings.ListConnections", 0)

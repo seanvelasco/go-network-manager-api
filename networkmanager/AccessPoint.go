@@ -122,16 +122,35 @@ func GetAccessPointInfo(path dbus.ObjectPath) (interface{}, error) {
 
 }
 
-func createAccessPoint(path dbus.ObjectPath) *accessPoint {
+func createAccessPoint(path dbus.ObjectPath) {
 
-	obj := c.Object("org.freedesktop.NetworkManager", path)
+	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
 
-	ap := &accessPoint{
-		dbusBase: dbusBase{
-			conn: c,
-			obj:  obj,
+	settings := &Settings{
+		"connection": map[string]interface{}{
+			"id":          "test",
+			"uuid":        "test",
+			"type":        "802-11-wireless",
+			"autoconnect": true,
+		},
+		"802-11-wireless": map[string]interface{}{
+			"ssid": map[string]interface{}{
+				"0": "test",
+			},
+			"mode": "ap",
+		},
+		"802-11-wireless-security": map[string]interface{}{
+			"key-mgmt": "wpa-psk",
+			"psk":      "11111111",
+		},
+		"ipv4": map[string]interface{}{
+			"method": "shared",
+		},
+		"ipv6": map[string]interface{}{
+			"method": "ignore",
 		},
 	}
 
-	return ap
+	obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings)
+
 }

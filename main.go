@@ -52,8 +52,13 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	// Get path of wireless
 
 	fmt.Println("WIRELESS", wireless)
+
+	for _, attr := range wireless {
+		println(attr.(map[string]interface{})["State"].(uint32))
+	}
 
 	wired, err := networkmanager.GetDeviceByType(1)
 
