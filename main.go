@@ -46,4 +46,12 @@ func main() {
 
 	fmt.Println("ACCESS POINTS", aps)
 
+	dev, err := networkmanager.GetWirelessDevices()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("DEVICES", dev)
+
 }
