@@ -116,6 +116,8 @@ func getDeviceInterface(devicePath dbus.ObjectPath) (map[string]interface{}, err
 
 	}
 
+	deviceAttributes["DevicePath"] = devicePath
+
 	return deviceAttributes, nil
 }
 
@@ -134,6 +136,7 @@ func ListDevices() (interface{}, error) {
 			return nil, err
 		}
 		namedDevices = append(namedDevices, iface)
+		// append device path to slice
 	}
 
 	return namedDevices, nil

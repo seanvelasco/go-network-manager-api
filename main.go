@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"go-nm/networkmanager"
 	"net/http"
+
+	"github.com/godbus/dbus/v5"
 )
 
 var ResponseMessage struct {
@@ -45,7 +47,7 @@ func devices(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%s", jsonString)
 }
 
-func wiredDevices(w http.ResponseWriter, req *http.Request) {
+func getWiredDevices(w http.ResponseWriter, req *http.Request) {
 	devices, err := networkmanager.GetDeviceByType(1)
 
 	if err != nil {
@@ -58,7 +60,7 @@ func wiredDevices(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%s", jsonString)
 }
 
-func wirelessDevices(w http.ResponseWriter, req *http.Request) {
+func getWirelessDevices(w http.ResponseWriter, req *http.Request) {
 	devices, err := networkmanager.GetDeviceByType(2)
 
 	if err != nil {
@@ -115,9 +117,66 @@ func addNetwork(w http.ResponseWriter, req *http.Request) {
 
 }
 
+// func CreatePersonalNetwork(w http.ResponseWriter, req *http.Request) {
+// 	type network struct {
+// 		Ssid     string `json:"ssid"`
+// 		Password string `json:"password"`
+// 	}
+// 	var n network
+// 	decoder := json.NewDecoder(req.Body)
+// 	err := decoder.Decode(&n)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		ResponseMessage.Success = false
+// 		ResponseMessage.Message = "Failed to add" + n.Ssid
+// 		jsonString, _ := json.Marshal(ResponseMessage)
+// 		fmt.Fprintf(w, "%s", jsonString)
+// 		return
+// 	}
+// 	w.Header().Set("Content-Type", "application/json")
+// 	err = networkmanager.CreateAccessPoint(n.Ssid, n.Password)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		ResponseMessage.Success = false
+// 		ResponseMessage.Message = "Failed to add" + n.Ssid
+// 		jsonString, _ := json.Marshal(ResponseMessage)
+// 		fmt.Fprintf(w, "%s", jsonString)
+// 		return
+// 	}
+// 	ResponseMessage.Success = true
+// 	ResponseMessage.Message = "Successfully added" + n.Ssid
+// 	jsonString, err := json.Marshal(ResponseMessage)
+// 	fmt.Fprintf(w, "%s", jsonString)
+// }
+
 func main() {
 
-	networkmanager.InternetSharingOverEthernet()
+	// wirelessDevices, _ := networkmanager.GetDeviceByType(2)
+	// wirelessDevice := wirelessDevices[0].(map[string]interface{})["DevicePath"].(dbus.ObjectPath)
+
+	// wirelessNetwork := networkmanager.APNetwork{
+	// 	Ssid:     "Test",
+	// 	Password: "Test",
+	// 	Device:   wirelessDevice,
+	// }
+
+	// networkmanager.CreateAccessPoint(wirelessNetwork)
+
+	//////////////////////////////
+
+	wiredDevices, _ := networkmanager.GetDeviceByType(1)
+
+	fmt.Println(wiredDevices)
+
+	wiredDevice := wiredDevices[0].(map[string]interface{})["DevicePath"].(dbus.ObjectPath)
+
+	networkmanager.InternetSharingOverEthernet(wiredDevice)
+
+	// Get the list of wireless devices
+	// devicess, _ := networkmanager.GetDeviceByType(2)
+
+	// // get the first device's object path
+	// device := devicess[0].(map[string]interface{})["DevicePath"].(dbus.ObjectPath)
 
 	// settings, err := networkmanager.GetConnectionSettings("/org/freedesktop/NetworkManager/Settings/71")
 
@@ -141,8 +200,8 @@ func main() {
 	http.HandleFunc("/settings", settings)
 	http.HandleFunc("/connectivity", connectivity)
 	http.HandleFunc("/devices", devices)
-	http.HandleFunc("/devices/wired", wiredDevices)
-	http.HandleFunc("/devices/wireless", wirelessDevices)
+	http.HandleFunc("/devices/wired", getWiredDevices)
+	http.HandleFunc("/devices/wireless", getWirelessDevices)
 
 	http.HandleFunc("/add", addNetwork)
 

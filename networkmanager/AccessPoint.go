@@ -122,26 +122,24 @@ func GetAccessPointInfo(path dbus.ObjectPath) (interface{}, error) {
 
 }
 
-func createAccessPoint(path dbus.ObjectPath) {
+func CreateAccessPoint(network APNetwork) (dbus.ObjectPath, error) {
 
 	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
 
 	settings := &Settings{
 		"connection": map[string]interface{}{
-			"id":          "test",
-			"uuid":        "test",
+			"id": "test",
+			// "uuid":        "test",
 			"type":        "802-11-wireless",
 			"autoconnect": true,
 		},
 		"802-11-wireless": map[string]interface{}{
-			"ssid": map[string]interface{}{
-				"0": "test",
-			},
+			"ssid": []byte(network.Ssid),
 			"mode": "ap",
 		},
 		"802-11-wireless-security": map[string]interface{}{
 			"key-mgmt": "wpa-psk",
-			"psk":      "11111111",
+			"psk":      network.Password,
 		},
 		"ipv4": map[string]interface{}{
 			"method": "shared",
@@ -150,7 +148,17 @@ func createAccessPoint(path dbus.ObjectPath) {
 			"method": "ignore",
 		},
 	}
+	var call *dbus.Call = obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings)
 
-	obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings)
+	if call.Err != nil {
+		panic(call.Err)
+	}
+
+	call2, err := ActivateConnection(call.Body[0].(dbus.ObjectPath), network.Device)
+	if err != nil {
+		panic(err)
+	}
+
+	return call2[0].(dbus.ObjectPath), nil
 
 }

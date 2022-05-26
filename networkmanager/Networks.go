@@ -81,14 +81,14 @@ func GetAccessPoints(path dbus.ObjectPath) (interface{}, error) {
 
 }
 
-func InternetSharingOverEthernet() {
+func InternetSharingOverEthernet(device dbus.ObjectPath) {
 
 	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
 
 	settings := &Settings{
 		"connection": map[string]interface{}{
-			"id":   "Internet Sharing over Ethernet",
-			"uuid": "uuid",
+			"id": "Internet Sharing over Ethernet",
+			// "uuid": "uuid",
 			"type": "802-3-ethernet",
 		},
 		"802-3-ethernet": map[string]interface{}{
@@ -102,7 +102,20 @@ func InternetSharingOverEthernet() {
 			"method": "ignore",
 		},
 	}
+	var call *dbus.Call
 
-	obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings)
+	call = obj.Call("org.freedesktop.NetworkManager.Settings.AddConnection", 0, settings)
+
+	if call.Err != nil {
+		fmt.Println(call.Err)
+	}
+	fmt.Println(call.Body)
+
+	call2, err := ActivateConnection(call.Body[0].(dbus.ObjectPath), dbus.ObjectPath(device))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(call2)
 
 }

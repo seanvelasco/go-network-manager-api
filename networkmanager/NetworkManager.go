@@ -7,6 +7,12 @@ import (
 var c *dbus.Conn
 var cobj dbus.Object
 
+type APNetwork struct {
+	Ssid     string          `json:"ssid"`
+	Password string          `json:"password"`
+	Device   dbus.ObjectPath `json:"device"`
+}
+
 type Device interface {
 	GetAccessPoints() (dbus.ObjectPath, error)
 }

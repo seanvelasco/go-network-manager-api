@@ -39,3 +39,8 @@ func (dbus *dbusBase) getUint32Property(iface string) (uint32, error) {
 	}
 	return value.Value().(uint32), nil
 }
+
+// Convert type s to type ay (byte array)
+// func StringToByteArray(s string) ([]byte, error) {
+// 	return []byte(s), nil
+// }

@@ -1,6 +1,10 @@
 package networkmanager
 
-import "github.com/godbus/dbus/v5"
+import (
+	"fmt"
+
+	"github.com/godbus/dbus/v5"
+)
 
 func GetConnectionSettings(path dbus.ObjectPath) (interface{}, error) {
 
@@ -22,12 +26,19 @@ func GetConnectionSettings(path dbus.ObjectPath) (interface{}, error) {
 	return rv, nil
 }
 
-func activateConnection(connection interface{}, path dbus.ObjectPath) (interface{}, error) {
+func ActivateConnection(connection interface{}, path dbus.ObjectPath) ([]interface{}, error) {
 
 	obj := c.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
 
-	var activeConnection []interface{}
-	obj.Call("org.freedesktop.NetworkManager.ActivateConnection", 0, connection, path, "/").Store(&activeConnection)
+	//var activeConnection []interface{}
+	// body: [connection, path, "/"]
 
-	return activeConnection, nil
+	var call *dbus.Call
+	call = obj.Call("org.freedesktop.NetworkManager.ActivateConnection", 0, connection, path, path)
+	if call.Err != nil {
+		return nil, call.Err
+	}
+	fmt.Println(call.Body)
+
+	return call.Body, nil
 }
