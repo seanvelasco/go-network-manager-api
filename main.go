@@ -89,7 +89,7 @@ func addNetwork(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		ResponseMessage.Success = false
-		ResponseMessage.Message = "Failed to add" + n.Ssid
+		ResponseMessage.Message = "Failed to add " + n.Ssid
 		jsonString, _ := json.Marshal(ResponseMessage)
 		fmt.Fprintf(w, "%s", jsonString)
 		return
@@ -102,14 +102,14 @@ func addNetwork(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		ResponseMessage.Success = false
-		ResponseMessage.Message = "Failed to add" + n.Ssid
+		ResponseMessage.Message = "Failed to add " + n.Ssid
 		jsonString, _ := json.Marshal(ResponseMessage)
 		fmt.Fprintf(w, "%s", jsonString)
 		return
 	}
 
 	ResponseMessage.Success = true
-	ResponseMessage.Message = "Successfully added" + n.Ssid
+	ResponseMessage.Message = "Successfully added " + n.Ssid
 
 	jsonString, err := json.Marshal(ResponseMessage)
 
