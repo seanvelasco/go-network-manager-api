@@ -1,10 +1,10 @@
 # Network Manager
 
-# Methods
+## Methods
 
-# Common issues
+## Common issues
 
-## Wired device is strictly unmanaged
+### Wired device is strictly unmanaged
 
 This problem typically occurs on systems running Ubuntu Server where NetworkManager is not originally installed.
 
@@ -37,7 +37,7 @@ network:
     version: 2
 ```
 
-# Compatability
+## Compatability
 
 This software can be installed on any Linux system that uses NetWorkManager.
 
