@@ -4,9 +4,12 @@
 
 # Common issues
 
-### Wired device is strictly unmanaged
+## Wired device is strictly unmanaged
 
-Make sure netplan configuration exists
+This problem typically occurs on systems running Ubuntu Server where NetworkManager is not originally installed.
+
+Navigate to the below directory and make sure that the netplan configuration file is present.
+
 
 ```
 cd /etc/netplan
@@ -17,13 +20,13 @@ sudo nano 50-cloud-init.yaml
 ```
 
 
-If not, run the following
+If it does not exist in the given directory, run the following
 
 ```
 sudo netplan generate && sudo netplan apply
 ```
 
-Navigate to `/etc/netplan`, edit `50-cloud-init.yaml` and add NetWorkManager as the renderer
+Edit `/etc/netplan/50-cloud-init.yaml` and add **NetworkManager** as the renderer
 
 ```
 network:
